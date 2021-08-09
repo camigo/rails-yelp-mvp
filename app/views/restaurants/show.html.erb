@@ -1,36 +1,49 @@
-<div class="card-wide" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.2)), url('https://source.unsplash.com/collection/312299/');">
-  <div class="card-category"><%= @restaurant.category %></div>
-  <div class="card-description">
-    <h2><%= @restaurant.name %></h2>
-    <p><%= @restaurant.address %></p>
-    <p><%= @restaurant.phone_number %></p>
-    </div>
-    <%= link_to 'Add a review', new_restaurant_review_path(@restaurant), class: "button-white" %>
-  
-</div>
-
-
-<div class="wrapper">
 <div class="container">
   <div class="row">
-        <table>
+    <div class="col-xs-12 col-sm-10 col-sm-offset-1">
+      <h1><%= @restaurant.name %></h1>
+      <table class="table table-bordered">
+        <tbody>
           <tr>
-            <th></th>
-            <th>Rating</th>
+            <th scope="row">Address</th>
+            <td><%= @restaurant.address %></td>
           </tr>
-          <% @restaurant.reviews.each do |review| %>
-            <tr>
-            <td><%= review.content %></td>
-            <td>
-            <% "#{review.rating}".to_i.times do %>
-              <i class="fa fa-star" aria-hidden="true"></i>
+          <tr>
+            <th scope="row">Phone Number</th>
+            <td><%= @restaurant.phone_number %></td>
+          </tr>
+          <tr>
+            <th scope="row">Category</th>
+            <td><%= @restaurant.category %></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="list-group">
+        <% @restaurant.reviews.each do |review| %>
+          <li class="list-group-item">
+            <small>
+              <% count = 0 %>
+              <% 5.times do %>
+                <% if review.rating > count %>
+                  <i class="fas fa-star"></i>
+                <% else %>
+                  <i class="far fa-star"></i>
+                <% end %>
+                <% count += 1 %>
               <% end %>
-              </td>
-            </tr>
-          <% end %> 
-          </table>
+            </small>
+            <p><%= review.content %></p>
+          </li>
+        <% end %>
+      </div>
+
+      <%= simple_form_for [@restaurant, @review] do |f| %>
+        <%= f.input :rating, collection: 0..5 %>
+        <%= f.input :content%>
+        <%= f.submit class: 'btn btn-primary' %>
+      <% end %>
+      <%= link_to "See all restaurants", restaurants_path %>
+    </div>
   </div>
 </div>
-</div>
-
-
